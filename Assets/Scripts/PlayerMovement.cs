@@ -11,16 +11,29 @@ public class PlayerMovement : MonoBehaviour
     private float jumpHeight = 3.0f;
     private float jumpTime = 0.5f;
     private float initialJumpVelocity;
-    private bool jump;
+    private int numJumps;
+   
 
     [SerializeField] private float speed = 9.0f;
     [SerializeField] private float rotationSpeed = 720.0f;
+    [SerializeField] private int jumpMax = 2;
     [SerializeField] private CharacterController cc;
     float horiz;
     float vert;
+
+    public void Respawn(Vector3 spawnPoint)
+    {
+        //stop falling
+        yVelocity = groundedYVelocity;
+        //set to given position
+        transform.position = spawnPoint;
+        //apply transform changes  to the physics engine manually
+        Physics.SyncTransforms();
+    }
     // Start is called before the first frame update
     void Start()
     {
+        numJumps = jumpMax;
         float timeToApex = jumpTime / 2.0f;
         gravity = (-2 * jumpHeight) / Mathf.Pow(timeToApex, 2);
 
@@ -40,15 +53,15 @@ public class PlayerMovement : MonoBehaviour
 
         yVelocity += gravity * Time.deltaTime;
         if(cc.isGrounded && yVelocity < 0f){
-            jump = true;
+            numJumps = jumpMax;
             yVelocity = groundedYVelocity;
         }
 
         movement *= speed;
-        if (Input.GetButtonDown("Jump") && jump){
+        if (Input.GetButtonDown("Jump") && numJumps > 0){
             yVelocity = initialJumpVelocity;
-            jump = false;
-            
+            print(numJumps);
+            numJumps -= 1;
         }
         movement.y = yVelocity;
         movement *= Time.deltaTime;
