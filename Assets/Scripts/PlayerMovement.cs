@@ -30,6 +30,7 @@ public class PlayerMovement : MonoBehaviour
         //apply transform changes  to the physics engine manually
         Physics.SyncTransforms();
     }
+
     // Start is called before the first frame update
     void Start()
     {
@@ -60,7 +61,6 @@ public class PlayerMovement : MonoBehaviour
         movement *= speed;
         if (Input.GetButtonDown("Jump") && numJumps > 0){
             yVelocity = initialJumpVelocity;
-            print(numJumps);
             numJumps -= 1;
         }
         movement.y = yVelocity;
